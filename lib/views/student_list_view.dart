@@ -10,7 +10,19 @@ class StudentListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Student Details"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("Student Details"),
+        centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              controller.loadStudents();
+            },
+            child: Icon(Icons.refresh),
+          ),
+        ],
+        actionsPadding: EdgeInsets.only(right: 10),
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());

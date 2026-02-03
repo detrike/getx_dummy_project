@@ -15,8 +15,8 @@ class StudentController extends GetxController {
 
   Future<void> loadStudents() async {
     try {
-      await Future.delayed(const Duration(seconds: 4));
       isLoading.value = true;
+      await Future.delayed(const Duration(seconds: 4));
       final String response = await rootBundle.loadString(
         'assets/students.json',
       );
