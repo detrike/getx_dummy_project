@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/student_controller.dart';
+import 'student_detail_view.dart';
 
 class StudentListView extends StatelessWidget {
   final StudentController controller = Get.put(StudentController());
@@ -23,39 +24,47 @@ class StudentListView extends StatelessWidget {
         ],
         actionsPadding: EdgeInsets.only(right: 10),
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
-        }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          controller.loadStudents();
+        },
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        if (controller.students.isEmpty) {
-          return Center(child: Text("No students found"));
-        }
+          if (controller.students.isEmpty) {
+            return Center(child: Text("No students found"));
+          }
 
-        return ListView.builder(
-          itemCount: controller.students.length,
-          itemBuilder: (context, index) {
-            final student = controller.students[index];
-            return Card(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              elevation: 3,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  child: Text(student.grade),
+          return ListView.builder(
+            itemCount: controller.students.length,
+            itemBuilder: (context, index) {
+              final student = controller.students[index];
+              return Card(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                elevation: 3,
+                child: ListTile(
+                  onTap: () {
+                    Get.to(() => StudentDetailView(student: student));
+                  },
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    child: Text(student.grade),
+                  ),
+                  title: Text(
+                    student.name,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("${student.subject} • Age: ${student.age}"),
+                  trailing: Text("ID: ${student.id}"),
                 ),
-                title: Text(
-                  student.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text("${student.subject} • Age: ${student.age}"),
-                trailing: Text("ID: ${student.id}"),
-              ),
-            );
-          },
-        );
-      }),
+              );
+            },
+          );
+        }),
+      ),
     );
   }
 }
