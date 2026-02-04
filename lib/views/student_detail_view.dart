@@ -1,13 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/student.dart';
 
 class StudentDetailView extends StatelessWidget {
-  final Student student;
-
-  const StudentDetailView({super.key, required this.student});
+  const StudentDetailView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final args = Get.arguments;
+    log('Get.arguments ::: ${Get.arguments}');
+    // Middleware should ensure this is a Student, but keep a fallback.
+    final Student student = args is Student
+        ? args
+        : Student(id: 0, name: 'Unknown', age: 0, grade: '-', subject: '-');
     return Scaffold(
       appBar: AppBar(
         title: Text(student.name),
